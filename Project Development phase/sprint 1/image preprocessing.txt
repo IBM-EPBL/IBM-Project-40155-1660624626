@@ -1,0 +1,267 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": []
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "1kQ62HbTqo6n",
+        "outputId": "445b4837-110d-4e12-9a95-07f8e9aac7c0"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Mounted at /content/drive\n"
+          ]
+        }
+      ],
+      "source": [
+        "from google.colab import drive\n",
+        "drive.mount('/content/drive')"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "ls\n"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "fEmeg9_jq6_5",
+        "outputId": "7fffef9c-d675-4ede-9789-6c4ab3421a47"
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+"name": "stdout",
+          "text": [
+            "\u001b[0m\u001b[01;34mdrive\u001b[0m/  \u001b[01;34msample_data\u001b[0m/\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "cd//content/drive/MyDrive/Colab Notebooks/Dataset\n"
+      ],
+      "metadata": {
+        "id": "OsYNq_PPs5LM"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "/content/drive/.shortcut-targets-by-id/1LL5lvl6AsdVwW9LWVu_GXEUCoV7jYm-c/Dataset"
+      ],
+      "metadata": {
+        "id": "sg42ph87sYvJ"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "ls"
+      ],
+      "metadata": {
+        "id": "bAkF2vb-uHVk"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "IBM_review.pptx  photo-1589820296156-2454bb8a6ad1.jpg  TRAIN_SET/\n",
+        "nutrition.h5     TEST_SET/\n"
+      ],
+      "metadata": {
+        "id": "uXMYFbjwxiMl"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# IMPORTING NECCESSARY*LIBRARIES"
+],
+      "metadata": {
+        "id": "vAIC85HFxr-h"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import numpy as np#used for numerical analysis\n",
+        "import tensorflow #open source used for both ML and DL for computation\n",
+        "from tensorflow.keras.models import Sequential #it is a plain stack of layers\n",
+        "from tensorflow.keras import layers #A layer consists of a tensor-in tensor-out computation function\n",
+        "#Dense layer is the regular deeply connected neural network layer\n",
+        "from tensorflow.keras.layers import Dense,Flatten\n",
+        "#Faltten-used fot flattening the input or change the dimension\n",
+        "from tensorflow.keras.layers import Conv2D,MaxPooling2D,Dropout #Convolutional layer\n",
+        "#MaxPooling2D-for downsampling the image\n",
+        "from keras.preprocessing.image import ImageDataGenerator"
+      ],
+      "metadata": {
+        "id": "Ck29EyAJxoZo"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "# Image Data Augumentation"
+      ],
+      "metadata": {
+        "id": "uyV1-cBnx9gf"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#setting parameter for Image Data agumentation to the training data\n",
+        "train_datagen = ImageDataGenerator(rescale=1./255,shear_range=0.2,zoom_range=0.2,horizontal_flip=True)\n",
+        "#Image Data agumentation to the testing data\n",
+        "test_datagen=ImageDataGenerator(rescale=1./255)\n"
+      ],
+      "metadata": {
+        "id": "hesMdp7xx0LM"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "## Loading our data and performing data agumentation"
+      ],
+"metadata": {
+        "id": "pDz135yLyGMf"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#performing data agumentation to train data\n",
+        "x_train = train_datagen.flow_from_directory(\n",
+        "    r'/content/drive/MyDrive/Colab Notebooks/Dataset/TRAIN_SET',\n",
+        "    target_size=(64, 64),batch_size=5,color_mode='rgb',class_mode='sparse')\n",
+        "#performing data agumentation to test data\n",
+        "x_test = test_datagen.flow_from_directory(\n",
+        "    r'/content/drive/MyDrive/Colab Notebooks/Dataset/TEST_SET',\n",
+        "    target_size=(64, 64),batch_size=5,color_mode='rgb',class_mode='sparse') \n"
+      ],
+      "metadata": {
+        "id": "HqPkFze_yP5s"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Found 4138 images belonging to 5 classes.\n",
+        "Found 929 images belonging to 3 classes.\n"
+      ],
+      "metadata": {
+        "id": "hIsfnEbAyspK"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "print(x_train.class_indices)#checking the number of classes"
+      ],
+      "metadata": {
+        "id": "YP91URyzzjYP"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "{'APPLES': 0, 'BANANA': 1, 'ORANGE': 2, 'PINEAPPLE': 3, 'WATERMELON': 4}\n"
+      ],
+      "metadata": {
+        "id": "uLU6uB0QzqAG"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "print(x_test.class_indices)#checking the number of classes\n"
+],
+      "metadata": {
+        "id": "pE_pdCmezr3F"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "{'APPLES': 0, 'BANANA': 1, 'ORANGE': 2}\n"
+      ],
+      "metadata": {
+        "id": "4tNmJYDxz5mW"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "from collections import Counter as c\n",
+        "c(x_train .labels)\n"
+      ],
+      "metadata": {
+        "id": "dhHlcn9lz8mx"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Counter({0: 995, 1: 1374, 2: 1019, 3: 275, 4: 475})"
+      ],
+      "metadata": {
+        "id": "o1H_lxiK0FDg"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [],
+      "metadata": {
+        "id": "7HCI0n3W0RTU"
+      },
+      "execution_count": null,
+      "outputs": []
+    }
+  ]
+}
